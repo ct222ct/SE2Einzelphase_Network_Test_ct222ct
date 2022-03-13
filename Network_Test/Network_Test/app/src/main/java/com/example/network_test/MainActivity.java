@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
+
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
@@ -39,6 +42,32 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+    public  String matrikelnummer_sort(int[] number){
+        ArrayList<Integer> geradeZahlen = new ArrayList<>();
+        ArrayList<Integer> ungeradeZahlen = new ArrayList<>();
+
+        String nummern = new String();
+
+        for (int i = 0; i < number.length; i++ ) {
+            if (number[i] % 2 == 0) {
+                geradeZahlen.add(number[i]);
+            }
+            if (number[i]%2 == 1){
+                ungeradeZahlen.add(number[i]);
+            }
+        }
+        Collections.sort(geradeZahlen);
+        Collections.sort(ungeradeZahlen);
+
+        for (int i = 0; i < geradeZahlen.size(); i++ ) {
+            nummern = nummern + geradeZahlen.get(i).toString();
+        }
+        for (int i = 0; i < ungeradeZahlen.size(); i++ ) {
+            nummern = nummern + ungeradeZahlen.get(i).toString();
+        }
+        return nummern;
+    }
 
 
     class TCP_Client extends AsyncTask<Void, Void, Void> {
@@ -103,9 +132,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            //serverAntwort = antwort;
 
+            super.onPostExecute(aVoid);
             serverAntwort.setText(antwort);
         }
     }
