@@ -19,29 +19,50 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
+    Button verbinden;
+    Button sortieren;
+    EditText matrikelnummer;
+    TextView geordneteZahlen;
+    TextView serverAntwort;
+    String ausgabe;
 
-        Button verbinden;
-        EditText matrikelnummer;
-        TextView serverAntwort;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+        geordneteZahlen = (TextView) findViewById(R.id.sortierteMatrikelnummer);
+        matrikelnummer = (EditText)findViewById(R.id.editTextNumber);
+        serverAntwort = (TextView) findViewById(R.id.serverAntwort);
+        verbinden = (Button) findViewById(R.id.verbinden);
+        sortieren = (Button) findViewById(R.id.sortieren);
 
-            matrikelnummer = (EditText) findViewById(R.id.editTextNumber);
-            serverAntwort = (TextView) findViewById(R.id.serverAntwort);
-            verbinden = (Button) findViewById(R.id.verbinden);
+        verbinden.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new TCP_Client().execute();
+                System.out.println("Verbunden");
+            }
+        });
 
-            verbinden.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new TCP_Client().execute();
-                    System.out.println("Verbunden");
+        sortieren.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                int[] zahlenArray = new int[matrikelnummer.length()];
+
+                for(int i=0;i<matrikelnummer.length();i++) {
+                    zahlenArray[i] = Character.getNumericValue(matrikelnummer.getText().charAt(i));
                 }
-            });
-        }
+                geordneteZahlen.setText(matrikelnummer_sort(zahlenArray));
+            }
+        });
+
+    }
+
+
 
     public  String matrikelnummer_sort(int[] number){
         ArrayList<Integer> geradeZahlen = new ArrayList<>();
@@ -132,8 +153,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-
             super.onPostExecute(aVoid);
+            //serverAntwort = antwort;
+
             serverAntwort.setText(antwort);
         }
     }
